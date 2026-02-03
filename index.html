@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BroFood Project - Pemesanan Makanan</title>
+    <style>
+        /* --- CSS Variables & Reset --- */
+        :root {
+            --primary-color: #ff6b6b; /* Warna merah selera makan */
+            --primary-hover: #fa5252;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #343a40;
+            --text-muted: #868e96;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 500px; /* Ukuran pas di HP dan rapi di laptop */
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--primary-color);
+        }
+
+        /* --- Header Section --- */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* --- Promosi Section --- */
+        .promo-section {
+            background-color: #fff0f0;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .promo-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .promo-section p {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        /* --- Form Section --- */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* --- Produk & Checkbox --- */
+        .product-item {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: background 0.2s;
+        }
+
+        .product-item:hover {
+            background-color: #fdfdfd;
+            border-color: #ced4da;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* --- Dropdown Jumlah (Hidden by default) --- */
+        .quantity-wrapper {
+            margin-top: 10px;
+            padding-left: 32px; /* Sejajar dengan teks produk */
+            display: none; /* Disembunyikan secara default */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .quantity-wrapper.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Button --- */
+        .btn-submit {
+            width: 100%;
+            background-color: #25D366; /* Warna WhatsApp */
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #1ebe57;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsif untuk layar sangat kecil */
+        @media (max-width: 400px) {
+            .container {
+                padding: 1.5rem;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <!-- 1. Header -->
+        <header>
+            <h1>BroFood Project</h1>
+            <p>Website Promosi & Pemesanan PKWU</p>
+        </header>
+
+        <!-- 2. Section Promosi -->
+        <section class="promo-section">
+            <h2>🍔 Selamat Datang di BroFood!</h2>
+            <p>
+                Kami menyajikan aneka makanan dan minuman kekinian buatan pelajar yang praktis, lezat, dan terjangkau. 
+                Solusi laparmu di sekolah!
+            </p>
+        </section>
+
+        <!-- 3. Form Pemesanan -->
+        <form id="orderForm">
+            <!-- Data Pemesan -->
+            <div class="form-group">
+                <label class="form-label" for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" class="form-input" placeholder="Contoh: Budi Santoso" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="kelas">Kelas</label>
+                <input type="text" id="kelas" class="form-input" placeholder="Contoh: XI IPA 2" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="alamat">Alamat</label>
+                <input type="text" id="alamat" class="form-input" placeholder="Contoh: Jl. Merdeka No. 10" required>
+            </div>
+
+            <!-- Pilihan Produk -->
+            <div class="form-group">
+                <label class="form-label">Pilih Produk:</label>
+                
+                <!-- Produk 1 -->
+                <div class="product-item">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" class="product-check" data-name="Oreo Milk Tea" id="check-1">
+                        <span class="product-name">Oreo Milk Tea</span>
+                    </label>
+                    <div class="quantity-wrapper" id="qty-wrapper-1">
+                        <label class="form-label" style="font-size: 0.85rem; margin-bottom: 0.3rem;">Jumlah:</label>
+                        <select class="form-input qty-select" id="qty-1">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Produk 2 -->
+                <div class="product-item">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" class="product-check" data-name="Sosmut" id="check-2">
+                        <span class="product-name">Sosmut</span>
+                    </label>
+                    <div class="quantity-wrapper" id="qty-wrapper-2">
+                        <label class="form-label" style="font-size: 0.85rem; margin-bottom: 0.3rem;">Jumlah:</label>
+                        <select class="form-input qty-select" id="qty-2">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Produk 3 -->
+                <div class="product-item">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" class="product-check" data-name="Spaghetti Mini" id="check-3">
+                        <span class="product-name">Spaghetti Mini</span>
+                    </label>
+                    <div class="quantity-wrapper" id="qty-wrapper-3">
+                        <label class="form-label" style="font-size: 0.85rem; margin-bottom: 0.3rem;">Jumlah:</label>
+                        <select class="form-input qty-select" id="qty-3">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Tombol Pesan -->
+            <button type="submit" class="btn-submit">
+                <!-- Ikon WhatsApp SVG Sederhana -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                Pesan Sekarang
+            </button>
+        </form>
+
+        <footer>
+            &copy; 2023 BroFood Project. Tugas PKWU.
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Logika Tampilan Dropdown Dinamis ---
+            const checkboxes = document.querySelectorAll('.product-check');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    // Mengambil ID dropdown yang sesuai dengan checkbox
+                    // ID checkbox: check-X, ID dropdown: qty-wrapper-X
+                    const checkId = this.id; 
+                    const number = checkId.split('-')[1]; 
+                    const qtyWrapper = document.getElementById(`qty-wrapper-${number}`);
+
+                    // Tampilkan atau sembunyikan dropdown
+                    if (this.checked) {
+                        qtyWrapper.classList.add('active');
+                    } else {
+                        qtyWrapper.classList.remove('active');
+                    }
+                });
+            });
+
+            // --- Logika Pengiriman WhatsApp ---
+            const form = document.getElementById('orderForm');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Mencegah reload halaman
+
+                // 1. Ambil Data Pemesan
+                const nama = document.getElementById('nama').value;
+                const kelas = document.getElementById('kelas').value;
+                const alamat = document.getElementById('alamat').value;
+
+                // 2. Ambil Data Produk yang Dipilih
+                let pesananList = [];
+                let hasItems = false;
+
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        hasItems = true;
+                        const productName = checkbox.getAttribute('data-name');
+                        // Ambil ID dropdown qty terkait
+                        const number = checkbox.id.split('-')[1];
+                        const qty = document.getElementById(`qty-${number}`).value;
+                        
+                        pesananList.push(`- ${productName} (${qty})`);
+                    }
+                });
+
+                // Validasi sederhana: Cek apakah ada produk yang dipilih
+                if (!hasItems) {
+                    // Menggunakan teknik custom notification (bukan alert native)
+                    const btn = document.querySelector('.btn-submit');
+                    const originalText = btn.innerHTML;
+                    
+                    btn.style.backgroundColor = '#ff6b6b'; // Warna merah error
+                    btn.innerHTML = '⚠️ Pilih minimal 1 produk!';
+                    
+                    setTimeout(() => {
+                        btn.style.backgroundColor = '#25D366'; // Kembali ke hijau WA
+                        btn.innerHTML = originalText;
+                    }, 2000);
+                    return;
+                }
+
+                // 3. Format Pesan WhatsApp
+                // %0a adalah kode untuk baris baru (Enter) di URL
+                const message = 
+                    `Halo, saya ingin memesan.%0a%0a` +
+                    `Nama: ${nama}%0a` +
+                    `Kelas: ${kelas}%0a` +
+                    `Alamat: ${alamat}%0a%0a` +
+                    `Pesanan:%0a` +
+                    pesananList.join('%0a');
+
+                // 4. Buat Link WhatsApp API
+                const phoneNumber = '6282228557526'; // Format internasional (ganti 08 dengan 62)
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+
+                // 5. Buka WhatsApp
+                window.open(whatsappUrl, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>
